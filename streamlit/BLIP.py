@@ -69,53 +69,11 @@ def play_sound():
     audio_bytes = audio_file.read()
     st.audio(audio_bytes, format='audio/wav')
 
-def visualize_speech():
-    data, samplerate = sf.read("speech.wav")
-    duration = len(data) / samplerate
 
-    # Create time axis
-    time = np.linspace(0., duration, len(data))
 
-     # Plot the speech waveform
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(time, data)
-    ax.set(xlabel="Time (s)", ylabel="Amplitude", title="Speech Waveform")
 
-    # Display the plot using st.pyplot()
-    st.pyplot(fig)
 
-# Function to insert data into the "caption" table
-def insert_caption_data(text, summary):
-    try:
-        # Connect to MySQL database
-        connection = mysql.connector.connect(
-            host="localhost",
-            port="3306",
-            user="root",
-            password="new_password",
-            database="caption_database"  # Name of your database
-        )
 
-        # Create a cursor object to execute SQL queries
-        cursor = connection.cursor()
-
-        # SQL query to insert data into the "caption" table
-        sql_insert_query = "INSERT INTO caption (text, summary) VALUES (%s, %s)"
-        data = (text, summary)
-
-        # Execute the SQL query
-        cursor.execute(sql_insert_query, data)
-
-        # Commit the transaction
-        connection.commit()
-
-        # Close cursor and connection
-        cursor.close()
-        connection.close()
-
-        st.success("Data inserted successfully into the 'caption' table!")
-    except mysql.connector.Error as error:
-        st.error(f"Error inserting data into 'caption' table: {error}")
 
 def main():
     st.set_page_config(
@@ -247,8 +205,7 @@ def main():
         # Initialize image captioning models
         caption_processor, caption_model = initialize_image_captioning()
 
-        # Initialize speech synthesis models
-        speech_processor, speech_model, speech_vocoder, speaker_embeddings = initialize_speech_synthesis()
+       
 
         # Generate caption
         with st.spinner("Generating Caption..."):
@@ -268,14 +225,7 @@ def main():
         st.write("caption with text")
         combined_text = f" {output_caption}\n: {box_list}"
         st.write(combined_text)
-        # Answer question
-        
        
-
-        text = "caption"
-        summary = combined_text
-
-        insert_caption_data(text, summary)
         
         
 
