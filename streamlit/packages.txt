@@ -1,1 +1,3 @@
-libgl1
+build-essential
+pkg-config
+default-libmysqlclient-dev
